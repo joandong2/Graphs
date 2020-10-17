@@ -22,7 +22,7 @@ def earliest_ancestor(ancestors, starting_node):
             #     return -1
 
             if current_node in v:
-                print('parent', k)
+                #print('parent', k)
                 stack.append(k)
 
     if current_node == starting_node:
