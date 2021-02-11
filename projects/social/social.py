@@ -1,6 +1,10 @@
+import random
+
+
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -32,10 +36,8 @@ class SocialGraph:
         """
         Takes a number of users and an average number of friendships
         as arguments
-
         Creates that number of users and a randomly distributed friendships
         between those users.
-
         The number of users must be greater than the average number of friendships.
         """
         # Reset graph
@@ -43,10 +45,23 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
-
         # Add users
+        for i in range(0, num_users):
+            self.add_user(f"User {i}")
 
         # Create friendships
+        # Generate all possible friendship combinations
+        possible_friendships = []  # [ (Friend_id_1, friend_id_2 )  ]
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+
+        # randomize the above array
+        random.shuffle(possible_friendships)
+        # Pick out num_users * avg_friendships number of friend combos from possible_friendships
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
 
     def get_all_social_paths(self, user_id):
         """
@@ -57,8 +72,25 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
+
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        queue = []
+        queue.append([user_id])
+
+        while len(queue) > 0:
+            current_path = queue.pop()  # pop a path from queue
+            current_vertex = current_path[-1]  # last element of the list
+
+            if current_vertex not in visited:
+                visited[current_vertex] = current_path  # add to visited
+
+            # queue all neighbors
+            for neighbor in self.friendships[current_vertex]:
+                if neighbor not in visited:
+                    new_path = current_path.copy()
+                    new_path.append(neighbor)
+                    queue.append(new_path)
         return visited
 
 
